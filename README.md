@@ -1,2 +1,2 @@
 # ContentProviderSample
-[![Build Status](https://secure.travis-ci.org/rochefort/gem-search.png)](http://travis-ci.org/rochefort/gem-search)
+[![Build Status](https://travis-ci.org/dkajiwara-asnet/ContentProviderSample.svg?branch=master)](https://travis-ci.org/dkajiwara-asnet/ContentProviderSample)
