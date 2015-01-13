@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -53,14 +52,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         mGridView.setOnItemClickListener(this);
         mAdapter = new GridAdapter();
         mGridView.setAdapter(mAdapter);
-
-        String i = null;
-        if(i.equals("hoge")){
-            Log.d("", "");
-        }
-        int ll = 10;
-        float l = 10.1F;
-
     }
 
     /**
