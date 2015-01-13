@@ -1,8 +1,12 @@
 language: android
 jdk:
     - openjdk7
+env:
+  global:
+    - DEPLOYGATE_USER=dkajiwara
+    - secure: "iPjWYgeOkRElP8B7aYXp2JJlaW0f8edyk20PtbayzqyIgsHawSHOxpdvzo2hdhAnMw5Q7+qLoo1NBlKNViEZXSmidsz14fOaG4qtoZJNcIClce05i+P1UG+rxzA1daLMCtoWW7+V2M6uLHd82c6KACk7z01D7CypCaETveX4KNY="
 script:
-    - ./gradlew assembleDebug
+    - ./gradlew assembleDebug uploadDeployGateDebug
 android:
   components:
     # Uncomment the lines below if you want to
