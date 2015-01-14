@@ -19,7 +19,7 @@ deploygate {
 
     apks {
         debug {
-            sourceFile = file("${project.buildDir}/apk/bookscan-manager-debug-unaligned.apk")
+            sourceFile = file("${project.buildDir}/outputs/apk/Application-debug-unaligned.apk")
         }
     }
 }
