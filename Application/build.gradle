@@ -14,9 +14,8 @@ apply plugin: 'findbugs'
 apply plugin: 'deploygate'
 
 deploygate {
-    userName = "$System.env.DEPLOYGATE_USER"
-    token = "$System.env.DEPLOYGATE_TOKEN"
-
+    token = DEPLOYGATE_TOKEN
+    userName = "dkajiwara"
     apks {
         debug {
             sourceFile = file("${project.buildDir}/outputs/apk/Application-debug-unaligned.apk")
