@@ -1,4 +1,5 @@
 language: android
+cache: bundler
 jdk:
     - openjdk7
 env:
