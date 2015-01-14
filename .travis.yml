@@ -4,7 +4,7 @@ jdk:
 env:
   global:
     - DEPLOYGATE_USER=dkajiwara
-    - secure:"Lg/N12oY+t8R4VmXfrVSAnDR/YjdWKP2igPDrMh2h7nrqKVn+SyccfocYWaHQgqkRc9BixbmZG9IjVNlaA0o2krwmHBX3XU0G2qAvyO4qK73MBOs5OEQWiiPb9JZU16aV8/Yb0Fo9XHpze0akdfddewlZ8VD5oOPldtitBpxp8I="
+    - secure:Lg/N12oY+t8R4VmXfrVSAnDR/YjdWKP2igPDrMh2h7nrqKVn+SyccfocYWaHQgqkRc9BixbmZG9IjVNlaA0o2krwmHBX3XU0G2qAvyO4qK73MBOs5OEQWiiPb9JZU16aV8/Yb0Fo9XHpze0akdfddewlZ8VD5oOPldtitBpxp8I=
 script:
     - ./gradlew assembleDebug uploadDeployGateDebug
 android:
