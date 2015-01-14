@@ -3,7 +3,7 @@ jdk:
     - openjdk7
 env:
   global:
-    secure: "Lg/N12oY+t8R4VmXfrVSAnDR/YjdWKP2igPDrMh2h7nrqKVn+SyccfocYWaHQgqkRc9BixbmZG9IjVNlaA0o2krwmHBX3XU0G2qAvyO4qK73MBOs5OEQWiiPb9JZU16aV8/Yb0Fo9XHpze0akdfddewlZ8VD5oOPldtitBpxp8I="
+    secure: "KBiE/95nTW2R1D/K7BGiRze7+BboM56PRrugdbR2dPxOyRXsSjuyTDvmw6E6iEhtL5QJhlAD0V+XJmjxUovT97ZaglZzPdkok/WzzxNkmL5WYRZckvxuzNAeB+jcSg47UVQOmOjL5OPWpFsoZA3QHsGnXV/S81RoMSF8DPMNYts="
 script:
     - ./gradlew assembleDebug uploadDeployGateDebug
 android:
