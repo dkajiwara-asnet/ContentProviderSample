@@ -14,7 +14,7 @@ apply plugin: 'findbugs'
 apply plugin: 'deploygate'
 
 deploygate {
-    token = "$System.env.myToken"//myToken
+    token = myToken
     userName = "dkajiwara"
     apks {
         debug {
@@ -23,7 +23,7 @@ deploygate {
     }
 }
 
-//uploadDeployGateDebug.dependsOn assembleDebug
+uploadDeployGateDebug.dependsOn assembleDebug
 
 task findbugs(type: FindBugs) {
     ignoreFailures = true
