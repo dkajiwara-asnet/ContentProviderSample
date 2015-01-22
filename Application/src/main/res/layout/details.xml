@@ -35,15 +35,25 @@
 
         </com.example.android.activityscenetransitionbasic.SquareFrameLayout>
 
-        <TextView
-              android:id="@+id/textview_title"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="?android:attr/colorPrimary"
-              android:theme="@android:style/Theme.Material"
-              android:textAppearance="@android:style/TextAppearance.Material.Title"
-              android:maxLines="2"
-              android:padding="16dp" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                  android:id="@+id/textview_title"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:background="?android:attr/colorPrimary"
+                  android:theme="@android:style/Theme.Material"
+                  android:textAppearance="@android:style/TextAppearance.Material.Title"
+                  android:maxLines="2"
+                  android:padding="16dp" />
+            <ImageView
+                android:id="@+id/star"
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/star_off"
+                android:layout_gravity="right|center_vertical"/>
+        </FrameLayout>
 
         <TextView
               android:layout_width="match_parent"

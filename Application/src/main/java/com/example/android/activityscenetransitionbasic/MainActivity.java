@@ -17,15 +17,22 @@
 package com.example.android.activityscenetransitionbasic;
 
 import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
+import android.widget.CursorAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,8 +44,7 @@ import com.squareup.picasso.Picasso;
  * user clicks on an item, {@link DetailActivity} is launched, using the Activity Scene Transitions
  * framework to animatedly do so.
  */
-public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
-
+public class MainActivity extends Activity implements AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private GridView mGridView;
     private GridAdapter mAdapter;
 
@@ -50,8 +56,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         // Setup the GridView and set the adapter
         mGridView = (GridView) findViewById(R.id.grid);
         mGridView.setOnItemClickListener(this);
-        mAdapter = new GridAdapter();
+
+        Cursor cursor = getContentResolver().query(MyContract.CONTENTS_URI, null, null, null, null);
+        mAdapter = new GridAdapter(this, cursor, false);
         mGridView.setAdapter(mAdapter);
+
+        getLoaderManager().initLoader(0, null, this);
     }
 
     /**
@@ -60,11 +70,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
      */
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        Item item = (Item) adapterView.getItemAtPosition(position);
+//        Item item = (Item) adapterView.getItemAtPosition(position);
+        Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
 
         // Construct an Intent as normal
         Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra(DetailActivity.EXTRA_PARAM_ID, item.getId());
+        intent.putExtra(DetailActivity.EXTRA_PARAM_ID, cursor.getInt(cursor.getColumnIndex(MyContract.MyColumns._ID)));
 
         // BEGIN_INCLUDE(start_activity)
         /**
@@ -87,43 +98,53 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         // END_INCLUDE(start_activity)
     }
 
-    /**
-     * {@link android.widget.BaseAdapter} which displays items.
-     */
-    private class GridAdapter extends BaseAdapter {
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Log.d(getClass().getSimpleName(), "onCreateLoader called.");
+        return new CursorLoader(this, MyContract.CONTENTS_URI, null, null, null, null);
+    }
 
-        @Override
-        public int getCount() {
-            return Item.ITEMS.length;
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.d(getClass().getSimpleName(), "onLoadFinished called.");
+        mAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        Log.d(getClass().getSimpleName(), "onLoaderReset called.");
+        mAdapter.swapCursor(null);
+    }
+
+    private class GridAdapter extends CursorAdapter {
+        public GridAdapter(Context context, Cursor c, boolean autoRequery) {
+            super(context, c, autoRequery);
         }
 
         @Override
-        public Item getItem(int position) {
-            return Item.ITEMS[position];
+        public View newView(Context context, Cursor cursor, ViewGroup parent) {
+            LayoutInflater inflater = getLayoutInflater();
+            return inflater.inflate(R.layout.grid_item, null);
         }
 
         @Override
-        public long getItemId(int position) {
-            return getItem(position).getId();
-        }
-
-        @Override
-        public View getView(int position, View view, ViewGroup viewGroup) {
-            if (view == null) {
-                view = getLayoutInflater().inflate(R.layout.grid_item, viewGroup, false);
-            }
-
-            final Item item = getItem(position);
-
+        public void bindView(View view, Context context, Cursor cursor) {
             // Load the thumbnail image
             ImageView image = (ImageView) view.findViewById(R.id.imageview_item);
-            Picasso.with(image.getContext()).load(item.getThumbnailUrl()).into(image);
+            Picasso.with(image.getContext()).load(
+                    cursor.getString(cursor.getColumnIndex(MyContract.MyColumns.PHOTO))).into(image);
 
             // Set the TextView's contents
             TextView name = (TextView) view.findViewById(R.id.textview_name);
-            name.setText(item.getName());
+            name.setText(cursor.getString(cursor.getColumnIndex(MyContract.MyColumns.TITLE)));
 
-            return view;
+            ImageView imageView = (ImageView) view.findViewById(R.id.fav);
+            boolean fav = cursor.getInt(cursor.getColumnIndex(MyContract.MyColumns.FAV)) == 1 ? true : false;
+            if (fav) {
+                imageView.setBackgroundResource(android.R.drawable.star_on);
+            } else {
+                imageView.setBackgroundResource(android.R.drawable.star_off);
+            }
         }
     }
 }

@@ -16,15 +16,19 @@
 
 package com.example.android.activityscenetransitionbasic;
 
-import com.squareup.picasso.Picasso;
-
 import android.app.Activity;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
 import android.transition.Transition;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 /**
  * Our secondary Activity which is launched from {@link MainActivity}. Has a simple detail UI
@@ -43,8 +47,13 @@ public class DetailActivity extends Activity {
 
     private ImageView mHeaderImageView;
     private TextView mHeaderTitle;
+    private ImageView mStartImage;
 
-    private Item mItem;
+    private String mName;
+    private String mAuthor;
+    private String mThumbnail;
+    private String mPhoto;
+    private boolean mFav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +61,40 @@ public class DetailActivity extends Activity {
         setContentView(R.layout.details);
 
         // Retrieve the correct Item instance, using the ID provided in the Intent
-        mItem = Item.getItem(getIntent().getIntExtra(EXTRA_PARAM_ID, 0));
+        final int id = getIntent().getIntExtra(EXTRA_PARAM_ID, 0);
+        Cursor cursor = getContentResolver().query(
+                Uri.withAppendedPath(MyContract.CONTENTS_URI, String.valueOf(id)),
+                null, null, null, null);
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                mName = cursor.getString(cursor.getColumnIndex(MyContract.MyColumns.TITLE));
+                mAuthor = cursor.getString(cursor.getColumnIndex(MyContract.MyColumns.AUTHOR));
+                mThumbnail = cursor.getString(cursor.getColumnIndex(MyContract.MyColumns.THUMBNAIL));
+                mPhoto = cursor.getString(cursor.getColumnIndex(MyContract.MyColumns.PHOTO));
+                mFav = cursor.getInt(cursor.getColumnIndex(MyContract.MyColumns.FAV)) == 1 ? true : false;
+            }
+        }
 
         mHeaderImageView = (ImageView) findViewById(R.id.imageview_header);
         mHeaderTitle = (TextView) findViewById(R.id.textview_title);
+        mStartImage = (ImageView) findViewById(R.id.star);
+        mStartImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFav = mFav ? false : true;
+                updateStar();
+                ContentValues values = new ContentValues();
+                values.put(MyContract.MyColumns.FAV, mFav);
+                getContentResolver().update(
+                        Uri.withAppendedPath(MyContract.CONTENTS_URI, String.valueOf(id)),
+                        values,
+                        MyContract.MyColumns._ID + "=?",
+                        new String[]{
+                                String.valueOf(id)
+                        });
+            }
+        });
 
         // BEGIN_INCLUDE(detail_set_view_name)
         /**
@@ -72,7 +111,7 @@ public class DetailActivity extends Activity {
 
     private void loadItem() {
         // Set the title TextView to the item's name and author
-        mHeaderTitle.setText(getString(R.string.image_header, mItem.getName(), mItem.getAuthor()));
+        mHeaderTitle.setText(getString(R.string.image_header, mName, mAuthor));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && addTransitionListener()) {
             // If we're running on Lollipop and we have added a listener to the shared element
@@ -83,6 +122,8 @@ public class DetailActivity extends Activity {
             // If all other cases we should just load the full-size image now
             loadFullSizeImage();
         }
+
+        updateStar();
     }
 
     /**
@@ -90,7 +131,7 @@ public class DetailActivity extends Activity {
      */
     private void loadThumbnail() {
         Picasso.with(mHeaderImageView.getContext())
-                .load(mItem.getThumbnailUrl())
+                .load(mThumbnail)
                 .noFade()
                 .into(mHeaderImageView);
     }
@@ -100,10 +141,18 @@ public class DetailActivity extends Activity {
      */
     private void loadFullSizeImage() {
         Picasso.with(mHeaderImageView.getContext())
-                .load(mItem.getPhotoUrl())
+                .load(mPhoto)
                 .noFade()
                 .noPlaceholder()
                 .into(mHeaderImageView);
+    }
+
+    private void updateStar() {
+        if (mFav) {
+            mStartImage.setImageResource(android.R.drawable.star_on);
+        } else {
+            mStartImage.setImageResource(android.R.drawable.star_off);
+        }
     }
 
     /**

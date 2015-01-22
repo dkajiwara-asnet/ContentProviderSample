@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
  Copyright 2013 The Android Open Source Project
 
@@ -14,33 +14,41 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-
-
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.android.activityscenetransitionbasic"
     android:versionCode="1"
-    android:versionName="1.0">
+    android:versionName="1.0" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.xxx.xxxxx.permission.NOT_OPEN" />
+
+    <permission
+        android:name="com.xxx.xxxxx.permission.NOT_OPEN"
+        android:protectionLevel="signature"/>
 
     <!-- Min/target SDK versions (<uses-sdk>) managed by build.gradle -->
-
-    <application android:allowBackup="true"
-        android:label="@string/app_name"
+    <application
+        android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:theme="@style/AppTheme">
-
-        <activity android:name=".MainActivity"
-                  android:label="@string/app_name">
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".DetailActivity" />
 
+        <provider
+            android:name=".MyContentProvider"
+            android:authorities="com.example.android"
+            android:enabled="true"
+            android:exported="true" >
+        </provider>
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
